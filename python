@@ -26,11 +26,11 @@ def fullClean(dataframe):
     #Perform clean on temp 'x'
     x = clean(dataframe)
     #Perform cleanIfMoreThanThreeNaN on temp 'x' and set to temp 'y'
-    y = cleanIfMoreThanThreeNaN(x)
+    x = cleanIfMoreThanThreeNaN(x)
     #Perform cleanDistance on temp 'y' and set to temp 'z'
-    z = cleanDistance(y)
+    x = cleanDistance(x)
     #Return 'z'
-    return z
+    return x
 
 def q1(dataframe):
     #Grab Start_Time column
