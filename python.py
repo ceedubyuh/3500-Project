@@ -41,16 +41,16 @@ def q1(dataframe):
     return dataframe['Months'].mode().to_string(index=False)
 
 def q2(dataframe):
-    data['Start_Time'] = pd.to_datetime(data['Start_Time'])
+    dataframe['Start_Time'] = pd.to_datetime(dataframe['Start_Time'])
     #Clean column from the time stamps
-    data['Start_Dates'] = data['Start_Time'].dt.date
+    dataframe['Start_Dates'] = dataframe['Start_Time'].dt.date
     #Convert to string
-    data['Strings'] = data['Start_Dates'].astype(str)
+    dataframe['Strings'] = dataframe['Start_Dates'].astype(str)
     #Remove first 5 and last 3 characters from strings
-    data['Years'] = data['Strings'].str[:-6]
-    for x in data['Years']:
+    dataframe['Years'] = dataframe['Strings'].str[:-6]
+    for x in dataframe['Years']:
         if x == '2020':
-            answer = data['State'].mode().to_string(index=False)
+            answer = dataframe['State'].mode().to_string(index=False)
             break
     return answer
 
