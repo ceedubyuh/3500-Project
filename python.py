@@ -23,13 +23,9 @@ def cleanDistance(dataframe):
     return dataframe.loc[data['Distance(mi)'] == 0]
 
 def fullClean(dataframe):
-    #Perform clean on temp 'x'
     x = clean(dataframe)
-    #Perform cleanIfMoreThanThreeNaN on temp 'x' and set to temp 'y'
     x = cleanIfMoreThanThreeNaN(x)
-    #Perform cleanDistance on temp 'y' and set to temp 'z'
     x = cleanDistance(x)
-    #Return 'z'
     return x
 
 def q1(dataframe):
@@ -44,6 +40,20 @@ def q1(dataframe):
     #Return the most occuring month, set index to false
     return dataframe['Months'].mode().to_string(index=False)
 
+def q2(dataframe):
+    data['Start_Time'] = pd.to_datetime(data['Start_Time'])
+    #Clean column from the time stamps
+    data['Start_Dates'] = data['Start_Time'].dt.date
+    #Convert to string
+    data['Strings'] = data['Start_Dates'].astype(str)
+    #Remove first 5 and last 3 characters from strings
+    data['Years'] = data['Strings'].str[:-6]
+    for x in data['Years']:
+        if x == '2020':
+            answer = data['State'].mode().to_string(index=False)
+            break
+    return answer
+
 
 print("Current time[{} seconds] Performing full data clean up".format(round(time.time()-start, 2)))
 data = fullClean(data)
@@ -53,3 +63,5 @@ print("Current time[{} seconds] Row count after cleaning: {}".format(round(time.
 #Question 1
 print("Current time[{} seconds] In what month were there more accidents reported? {}".format(round(time.time()-start, 2), q1(data)))
 
+#Question 2
+print("Current time[{} seconds] What is the state that had the most accidents in 2020? {}".format(round(time.time()-start, 2), q2(data)))
