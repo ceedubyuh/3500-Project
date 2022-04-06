@@ -24,10 +24,20 @@ def cleanDistance(dataframe):
     dataframe = dataframe[dataframe['Distance(mi)']!=0].dropna()
     return dataframe
 
+def cleanTimes(dataframe):
+    dataframe['Start_Time'] = pd.to_datetime(dataframe['Start_Time'])
+    dataframe['End_Time'] = pd.to_datetime(dataframe['End_Time'])
+    start = dataframe['Start_Time']
+    end = dataframe['End_Time']
+    dataframe['Difference'] = end - start
+    dataframe = dataframe[dataframe['Difference']!=0].dropna()
+    return dataframe
+
 def fullClean(dataframe):
     x = clean(dataframe)
     x = cleanIfMoreThanThreeNaN(x)
     x = cleanDistance(x)
+    x = cleanTimes(x)
     return x
 
 def q1(dataframe):
@@ -95,7 +105,7 @@ def q6(dataframe):
     hum = dataframe['Humidity(%)']
     for x in dataframe['Severity']:
         if x == 4:
-            return "Temperature: {}   Humidity: {}".format(temp.mean(), hum.mean())
+            return "Temperature: {}   Humidity: {}".format(round(temp.mean(), 3), round(hum.mean(), 3))
 
 def q7(dataframe):
     weather = dataframe['Weather_Condition']
@@ -129,12 +139,8 @@ def q10(dataframe):
     for x,y,z in zip(dataframe['State'], dataframe['Start_Time'], dataframe['End_Time']):
         if x == 'FL' and y.month in (3, 4, 5) and z.month in (3,4,5) and y.year == 2021 and z.year == 2021:
             return z - y
-        
-
-    
 
 
-        
 print("Current time[{} seconds] Performing full data clean up".format(round(time.time()-start, 2)))
 data = fullClean(data)
 
