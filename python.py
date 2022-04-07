@@ -86,7 +86,9 @@ def q3(dataframe):
 def q4(dataframe):
     #Initialize counters
     c1, c2, c3, c4 = 0, 0, 0, 0
+    #Get severity value from row if state value in the row is VA
     severity = dataframe.loc[dataframe['State'] == 'VA', 'Severity']
+    #Loop through all severities and tally each
     for x in severity:
         if x == 1:
             c1 += 1
@@ -106,7 +108,7 @@ def q4(dataframe):
         return 'Severity 4'
 
 def q5(dataframe):
-    #Set cities variable to all cities in California
+    #Get all cities if the state value in the row is CA
     cities = dataframe.loc[dataframe['State'] == 'CA', 'City']
     #Set years to all years
     years = data['Start_Time'].dt.year
@@ -131,6 +133,7 @@ def q8(dataframe):
 
 def q9(dataframe):
     c1, c2, c3, c4 = 0, 0, 0, 0
+    #Get all rows severity value were the rows city value is Bakersfield
     severity = dataframe.loc[dataframe['City'] == 'Bakersfield', 'Severity']
     for x in severity:
         if x == 1:
@@ -146,7 +149,6 @@ def q9(dataframe):
 def q10(dataframe):
     dataframe['Start_Time'] = pd.to_datetime(dataframe['Start_Time'])
     dataframe['End_Time'] = pd.to_datetime(dataframe['End_Time'])
-    #What was the longest accident (in hours) recorded in Florida in the Spring (March, April, and May) of 2022?
     for x,y,z in zip(dataframe['State'], dataframe['Start_Time'], dataframe['End_Time']):
         if x == 'FL' and y.month in (3, 4, 5) and z.month in (3,4,5) and y.year == 2021 and z.year == 2021:
             return z - y
