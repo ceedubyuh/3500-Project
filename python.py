@@ -129,9 +129,24 @@ def q9(dataframe):
     return "Severity 1: {}   Severity 2: {}   Severity 3: {}   Severity 4: {}".format(c1, c2, c3, c4)
 
 def q10(dataframe):
-    for x,y,z in zip(dataframe['State'], dataframe['Start_Time'], dataframe['End_Time']):
-        if x == 'FL' and y.month in (3, 4, 5) and z.month in (3,4,5) and y.year == 2021 and z.year == 2021:
-            return z - y
+    #What was the longest accident (in hours) recorded in Florida in the Spring (March, April, and May) of 2022?
+    startTime = dataframe['Start_Time']
+    state = dataframe['State']
+    march = dataframe[(startTime.dt.year == 2021) & (startTime.dt.month == 3) & (state == 'FL')]
+    april = dataframe[(startTime.dt.year == 2021) & (startTime.dt.month == 4) & (state == 'FL')]
+    may = dataframe[(startTime.dt.year == 2021) & (startTime.dt.month == 5) & (state == 'FL')]
+    marchTime = march['End_Time'] - march['Start_Time']
+    aprilTime = april['End_Time'] - april['Start_Time']
+    mayTime = may['End_Time'] - may['Start_Time']
+    maxMarchTime = marchTime.max()
+    maxAprilTime = aprilTime.max()
+    maxMayTime = mayTime.max()
+    if maxMarchTime > maxAprilTime and maxMarchTime > maxMayTime:
+        return maxMarchTime
+    elif maxAprilTime > maxMarchTime and maxAprilTime > maxMayTime:
+        return maxAprilTime
+    elif maxMayTime > maxMarchTime and maxMayTime > maxAprilTime:
+        return maxMayTime
 
 print("Current time[{} seconds] \
 Performing full data clean up".format(currTime()))
