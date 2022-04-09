@@ -1,7 +1,5 @@
 import pandas as pd
 import time
-import numpy as np
-
 start = time.time()
 
 def currTime():
@@ -129,7 +127,6 @@ def q9(dataframe):
     return "Severity 1: {}   Severity 2: {}   Severity 3: {}   Severity 4: {}".format(c1, c2, c3, c4)
 
 def q10(dataframe):
-    #What was the longest accident (in hours) recorded in Florida in the Spring (March, April, and May) of 2022?
     startTime = dataframe['Start_Time']
     state = dataframe['State']
     march = dataframe[(startTime.dt.year == 2021) & (startTime.dt.month == 3) & (state == 'FL')]
