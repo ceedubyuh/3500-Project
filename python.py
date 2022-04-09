@@ -52,36 +52,18 @@ def fullClean(dataframe):
 
 def q1(dataframe):
     #Grab Start_Time column
-    dataframe['Start_Time'] = pd.to_datetime(dataframe['Start_Time'])
     return dataframe['Start_Time'].dt.month.mode().to_string(index=False)
 
 def q2(dataframe):
-    dataframe['Start_Time'] = pd.to_datetime(dataframe['Start_Time'])
-    #Clean column from the time stamps
-    dataframe['Start_Dates'] = dataframe['Start_Time'].dt.date
-    #Convert to string
-    dataframe['Strings'] = dataframe['Start_Dates'].astype(str)
-    #Remove last 6 characters from strings
-    dataframe['Years'] = dataframe['Strings'].str[:-6]
-    for x in dataframe['Years']:
-        if x == '2020':
-            answer = dataframe['State'].mode().to_string(index=False)
-            break
-    return answer
+    time = dataframe['Start_Time']
+    rows = dataframe[(time.dt.year == 2020)]
+    return rows['State'].mode().to_string(index=False)
 
 def q3(dataframe):
-    dataframe['Start_Time'] = pd.to_datetime(dataframe['Start_Time'])
-    #Clean column from the time stamps
-    dataframe['Start_Dates'] = dataframe['Start_Time'].dt.date
-    #Convert to string
-    dataframe['Strings'] = dataframe['Start_Dates'].astype(str)
-    #Remove first 5 and last 3 characters from strings
-    dataframe['Years'] = dataframe['Strings'].str[:-6]
-    for x, y in zip(dataframe['Years'], dataframe['Severity']):
-        if x == '2021' and y == 2:
-            answer = dataframe['State'].mode().to_string(index=False)
-            break
-    return answer
+    time = dataframe['Start_Time']
+    sev = dataframe['Severity']
+    rows = dataframe[(time.dt.year == 2021) & (sev == 2)]
+    return rows['State'].mode().to_string(index=False)
 
 def q4(dataframe):
     #Initialize counters
@@ -147,8 +129,6 @@ def q9(dataframe):
     return "Severity 1: {}   Severity 2: {}   Severity 3: {}   Severity 4: {}".format(c1, c2, c3, c4)
 
 def q10(dataframe):
-    dataframe['Start_Time'] = pd.to_datetime(dataframe['Start_Time'])
-    dataframe['End_Time'] = pd.to_datetime(dataframe['End_Time'])
     for x,y,z in zip(dataframe['State'], dataframe['Start_Time'], dataframe['End_Time']):
         if x == 'FL' and y.month in (3, 4, 5) and z.month in (3,4,5) and y.year == 2021 and z.year == 2021:
             return z - y
