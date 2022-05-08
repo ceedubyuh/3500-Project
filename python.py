@@ -11,7 +11,7 @@ print("------------------------------------------------------------")
 print("Current time[{} seconds] Starting script".format(currTime()))
 print("Current time[{} seconds] Loading CSV".format(currTime()))
 
-data = pd.read_csv('Us_Accidents_data.csv')
+data = pd.read_csv('US_Accidents_data.csv')
 
 def clean(dataframe):
     #Clean if selected rows contain NaN
@@ -33,7 +33,7 @@ def cleanTimes(dataframe):
     start = dataframe['Start_Time']
     end = dataframe['End_Time']
     dataframe['Difference'] = end - start
-    dataframe = dataframe[dataframe['Difference']!=0].dropna()
+    dataframe = dataframe[dataframe['Difference']!=pd.Timedelta(0)].dropna()
     return dataframe
 
 def cleanZips(dataframe):
@@ -148,6 +148,7 @@ def q10(dataframe):
 print("Current time[{} seconds] \
 Performing full data clean up".format(currTime()))
 data = fullClean(data)
+
 print("Current time[{} seconds] \
 Row count after cleaning: {}" .format(currTime(), len(data)))
 #Question 1
@@ -180,3 +181,4 @@ print("Current time[{} seconds] \
 #Question 10
 print("Current time[{} seconds] \
 (Q10) What was the longest accident (in hours) recorded in Florida in the Spring (March, April, and May) of 2022? {}".format(currTime(), q10(data)))
+
