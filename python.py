@@ -1,17 +1,7 @@
 import pandas as pd
 import time
-start = time.time()
 
-def currTime():
-    x = round(time.time()-start, 2)
-    return x
-    
-print("Current time[{} seconds] Loading and cleaning input dataset".format(currTime()))
-print("------------------------------------------------------------")
-print("Current time[{} seconds] Starting script".format(currTime()))
-print("Current time[{} seconds] Loading CSV".format(currTime()))
 
-data = pd.read_csv('US_Accidents_data.csv')
 
 def clean(dataframe):
     #Clean if selected rows contain NaN
@@ -145,40 +135,107 @@ def q10(dataframe):
     elif maxMayTime > maxMarchTime and maxMayTime > maxAprilTime:
         return maxMayTime
 
-print("Current time[{} seconds] \
-Performing full data clean up".format(currTime()))
-data = fullClean(data)
+#Menu Start
+def menu():
+    print("\n(1) Load data")
+    print("(2) Process data")
+    print("(3) Print Answers")
+    print("(4) Search Accidents (Use City, State, and Zip Code)")
+    print("(5) Search Accidents (Year, Month and Day)")
+    print("(6) Search Accidents (Temperature Range and Visibility Range)")
+    print("(7) Quit")
 
-print("Current time[{} seconds] \
-Row count after cleaning: {}" .format(currTime(), len(data)))
-#Question 1
-print("Current time[{} seconds] \
-(Q1) In what month were there more accidents reported? {}".format(currTime(), q1(data)))
-#Question 2
-print("Current time[{} seconds] \
-(Q2) What is the state that had the most accidents in 2020? {}".format(currTime(), q2(data)))
-#Question 3
-print("Current time[{} seconds] \
-(Q3) What is the state that had the most accidents of severity 2 in 2021? {}".format(currTime(), q3(data)))
-#Question 4
-print("Current time[{} seconds] \
-(Q4) What severity is the most common in Virginia? {}".format(currTime(), q4(data)))
-#Question 5
-print("Current time[{} seconds] \
-(Q5) What are the 5 cities that had the most accidents in 2019 in California? {}".format(currTime(), q5(data)))
-#Question 6
-print("Current time[{} seconds] \
-(Q6) What was the average humidity and average temperature of all accidents of severity 4 that occurred in 2021? {}".format(currTime(), q6(data)))
-#Question 7
-print("Current time[{} seconds] \
-(Q7) What are the 3 most common weather conditions (weather_conditions) when accidents occurred? {}".format(currTime(), q7(data)))
-#Question 8
-print("Current time[{} seconds] \
-(Q8) What was the maximum visibility of all accidents of severity 2 that occurred in the state of New Hampshire? {}".format(currTime(), q8(data)))
-#Question 9
-print("Current time[{} seconds] \
-(Q9) How many accidents of each severity were recorded in Bakersfield? {}".format(currTime(), q9(data)))
-#Question 10
-print("Current time[{} seconds] \
-(Q10) What was the longest accident (in hours) recorded in Florida in the Spring (March, April, and May) of 2022? {}".format(currTime(), q10(data)))
+while(True):
+    try:
+        menu()
+        option = int(input("\nEnter your option: "))
+        print("Option", option, "has been selected")
+        
+        if option == 1:
+            start = time.time()
+            def currTime():
+                x = round(time.time()-start, 2)
+                return x
+            print("\nLoading and cleaning input data set:")
+            print("************************************")
+            print("Current time[{} seconds] Starting Script".format(currTime()))
+            print("Current time[{} seconds] Loading US_Accidents_data.csv".format(currTime()))
+            data = pd.read_csv('US_Accidents_data.csv')
+            print("Current time[{} seconds] Total Columns Read: {}".format(currTime(), len(data.columns)))
+            print("Current time[{} seconds] Total Rows Read: {}".format(currTime(), len(data)))
+            print("Time to load is: {}".format(currTime()))
+        
+        elif option == 2:
+            print("\nProcessing input data set:")
+            print("************************************")
+            print("Current time[{} seconds] Performing full data clean up".format(currTime()))
+            data = fullClean(data)
+            print("Current time[{} seconds] Row count after cleaning: {}".format(currTime(), len(data)), "\n")
+            #print("Time to load is: ")
+       
+        elif option == 3:
+            print("\nAnswering questions:")
+            print("************************************")
+           
+           #Question 1
+            print("Current time[{} seconds] (Q1) In what month were there more accidents reported? {}"
+                .format(currTime(), q1(data)))
+            #Question 2
+            print("Current time[{} seconds] (Q2) What is the state that had the most accidents in 2020? {}"
+                .format(currTime(), q2(data)))
+            #Question 3
+            print("Current time[{} seconds] (Q3) What is the state that had the most accidents of severity 2 in 2021? {}"
+                .format(currTime(), q3(data)))
+            #Question 4
+            print("Current time[{} seconds] (Q4) What severity is the most common in Virginia? {}"
+                .format(currTime(), q4(data)))    
+            #Question 5
+            print("Current time[{} seconds] (Q5) What are the 5 cities that had the most accidents in 2019 in California? {}"
+                .format(currTime(), q5(data)))
+            #Question 6
+            print("Current time[{} seconds] (Q6) What was the average humidity and average temperature of all accidents of severity 4 that occurred in 2021? {}"
+                .format(currTime(), q6(data)))
+            #Question 7
+            print("Current time[{} seconds] (Q7) What are the 3 most common weather conditions (weather_conditions) when accidents occurred? {}"
+                .format(currTime(), q7(data)))
+            #Question 8
+            print("Current time[{} seconds] (Q8) What was the maximum visibility of all accidents of severity 2 that occurred in the state of New Hampshire? {}"
+                .format(currTime(), q8(data)))
+            #Question 9
+            print("Current time[{} seconds] (Q9) How many accidents of each severity were recorded in Bakersfield? {}"
+                .format(currTime(), q9(data)))
+            #Question 10
+            print("Current time[{} seconds] (Q10) What was the longest accident (in hours) recorded in Florida in the Spring (March, April, and May) of 2022? {}"
+                .format(currTime(), q10(data)))  
+        elif option == 4:
+            #Take 3 input variables, set answer to the dataframe entries where all 3 inputs are found
+            city, state, zip = input("\nSearch Accidents (Use City, State, and Zip Code):").split()
+            answer = data[(data['City'] == city) & (data['State'] == state) & (data['Zipcode'] == zip)]
+            print(answer)
+            print("************************************")
+        elif option == 5:
+            #Take input (y), convert it to a datetime, print where the dataframe has equal datetimes as y
+            x = data['Start_Time']
+            y = input("\nSearch Accidents (Use Year, Month, and Day 2022-01-20):")
+            y = pd.to_datetime(y)
+            answer2 = data[(x.dt.year == y.year) & (x.dt.month == y.month) & (x.dt.day == y.day)]
+            print(answer2)
+            print("************************************")
+        elif option == 6:
+            #Take 2 input variables, convert them to floats to match dataframe columns, print the rows with those variables
+            temp, vis = input("\nSearch Accidents (Temperature and Visibility):").split()
+            temp = float(temp)
+            vis = float(vis)
+            answer3 = data[(data['Temperature(F)'] == temp) & (data['Visibility(mi)'] == vis)]
+            print(answer3)
+            print("************************************")        
+        elif option == 7:
+            print('\nTotal Running Time (In Minutes):{}'.format(currTime()))
+            exit()
+        else:
+            print("\nInvalid option, please try again.")
+    except ValueError:
+        print("\nInvalid option, please try again.")
+        
+
 
