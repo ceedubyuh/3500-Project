@@ -1,6 +1,19 @@
+# Course: CMPS 3500
+# CLASS PROJECT
+# Python data analysis
+# 
+# by:
+# Carter Womack, 
+# Jose Figueroa, 
+# Stuart Wurtman, 
+# Dylan Gonzalez
+#
+#desc: Python data analysis program
+#      that cleans a dataset, and 
+#      performs basic functions to
+#      to display the data in various ways
 import pandas as pd
 import time
-
 
 
 def clean(dataframe):
@@ -18,19 +31,25 @@ def cleanDistance(dataframe):
     return dataframe
 
 def cleanTimes(dataframe):
+    #Set Start and End time columns to datetimes
     dataframe['Start_Time'] = pd.to_datetime(dataframe['Start_Time'])
     dataframe['End_Time'] = pd.to_datetime(dataframe['End_Time'])
+    #Declare new datetimes as variables
+    #(not necessary, just easier to read in function)
     start = dataframe['Start_Time']
     end = dataframe['End_Time']
+    #Subtract end - start
     dataframe['Difference'] = end - start
+    #Set all differences that do not equal 0 to the dataframe and return it
     dataframe = dataframe[dataframe['Difference']!=pd.Timedelta(0)].dropna()
     return dataframe
 
 def cleanZips(dataframe):
-    dataframe['Clean_Zips'] = dataframe['Zipcode'].str[:5]
+    dataframe['Zipcode'] = dataframe['Zipcode'].str[:5]
     return dataframe
 
 def fullClean(dataframe):
+    #Perform all clean functions on dataframe
     x = clean(dataframe)
     x = cleanIfMoreThanThreeNaN(x)
     x = cleanDistance(x)
@@ -39,19 +58,26 @@ def fullClean(dataframe):
     return x
 
 def q1(dataframe):
-    #Grab Start_Time column
+    #Return the mode of the month value of all the Start_Times
     return dataframe['Start_Time'].dt.month.mode().to_string(index=False)
 
 def q2(dataframe):
+    #Set all start times to time variable
     time = dataframe['Start_Time']
-    rows = dataframe[(time.dt.year == 2020)]
-    return rows['State'].mode().to_string(index=False)
+    #Set newrows variable to all start times if they are in 2020
+    newrows = dataframe[(time.dt.year == 2020)]
+    #Return the mode of the newrows dataframe's 'State' variable
+    return newrows['State'].mode().to_string(index=False)
 
 def q3(dataframe):
+    #Set all start times to time variable
     time = dataframe['Start_Time']
+    #Set all severities to sev variable
     sev = dataframe['Severity']
-    rows = dataframe[(time.dt.year == 2021) & (sev == 2)]
-    return rows['State'].mode().to_string(index=False)
+    #Set newrows variable to all rows that equal 2021 with a severity of 2
+    newrows = dataframe[(time.dt.year == 2021) & (sev == 2)]
+    #Return the mode of the states in the newrows dataframe
+    return newrows['State'].mode().to_string(index=False)
 
 def q4(dataframe):
     #Initialize counters
@@ -94,11 +120,16 @@ def q6(dataframe):
     return "Temperature: {}   Humidity: {}".format(round(temp.mean(), 3), round(hum.mean(), 3))
 
 def q7(dataframe):
+    #Set all weather conditions to one variable
     weather = dataframe['Weather_Condition']
+    #Return the 3 most common weather types
     return weather.value_counts()[:3].index.tolist()
 
 def q8(dataframe):
+    #Set all visibilities to one variable
+    # such that the value for the rows 'State' column is equal to NH
     visibility = dataframe.loc[dataframe['State'] == 'NH', 'Visibility(mi)']
+    #Return the max visibility of that new variable
     return visibility.max()
 
 def q9(dataframe):
@@ -117,17 +148,25 @@ def q9(dataframe):
     return "Severity 1: {}   Severity 2: {}   Severity 3: {}   Severity 4: {}".format(c1, c2, c3, c4)
 
 def q10(dataframe):
+    #Set all start times to one variable
     startTime = dataframe['Start_Time']
+    #Set all states to one variable
     state = dataframe['State']
+    #Set all of march to one variable
     march = dataframe[(startTime.dt.year == 2021) & (startTime.dt.month == 3) & (state == 'FL')]
+    #Set all of april to one variable
     april = dataframe[(startTime.dt.year == 2021) & (startTime.dt.month == 4) & (state == 'FL')]
+    #Set all of may to one variable
     may = dataframe[(startTime.dt.year == 2021) & (startTime.dt.month == 5) & (state == 'FL')]
+    #Find the different in time for each month
     marchTime = march['End_Time'] - march['Start_Time']
     aprilTime = april['End_Time'] - april['Start_Time']
     mayTime = may['End_Time'] - may['Start_Time']
+    #Find the largest different of each month
     maxMarchTime = marchTime.max()
     maxAprilTime = aprilTime.max()
     maxMayTime = mayTime.max()
+    #Simple if statement to find the largest different between all 3 months
     if maxMarchTime > maxAprilTime and maxMarchTime > maxMayTime:
         return maxMarchTime
     elif maxAprilTime > maxMarchTime and maxAprilTime > maxMayTime:
@@ -146,16 +185,16 @@ def menu():
     print("(7) Quit")
 
 while(True):
+    start = time.time()
+    def currTime():
+        x = round(time.time()-start, 2)
+        return x
     try:
         menu()
         option = int(input("\nEnter your option: "))
         print("Option", option, "has been selected")
         
         if option == 1:
-            start = time.time()
-            def currTime():
-                x = round(time.time()-start, 2)
-                return x
             print("\nLoading and cleaning input data set:")
             print("************************************")
             print("Current time[{} seconds] Starting Script".format(currTime()))
@@ -176,7 +215,6 @@ while(True):
         elif option == 3:
             print("\nAnswering questions:")
             print("************************************")
-           
            #Question 1
             print("Current time[{} seconds] (Q1) In what month were there more accidents reported? {}"
                 .format(currTime(), q1(data)))
@@ -207,33 +245,42 @@ while(True):
             #Question 10
             print("Current time[{} seconds] (Q10) What was the longest accident (in hours) recorded in Florida in the Spring (March, April, and May) of 2022? {}"
                 .format(currTime(), q10(data)))  
+        
         elif option == 4:
             #Take 3 input variables, set answer to the dataframe entries where all 3 inputs are found
             city, state, zip = input("\nSearch Accidents (Use City, State, and Zip Code):").split()
             answer = data[(data['City'] == city) & (data['State'] == state) & (data['Zipcode'] == zip)]
-            print(answer)
+            print("There were {} accidents found.".format(len(answer)))
+            print("Time to perfom this search is: {}".format(currTime()))
             print("************************************")
+        
         elif option == 5:
             #Take input (y), convert it to a datetime, print where the dataframe has equal datetimes as y
             x = data['Start_Time']
             y = input("\nSearch Accidents (Use Year, Month, and Day 2022-01-20):")
             y = pd.to_datetime(y)
             answer2 = data[(x.dt.year == y.year) & (x.dt.month == y.month) & (x.dt.day == y.day)]
-            print(answer2)
+            print("There were {} accidents found.".format(len(answer2)))
+            print("Time to perfom this search is: {}".format(currTime()))
             print("************************************")
+        
         elif option == 6:
             #Take 2 input variables, convert them to floats to match dataframe columns, print the rows with those variables
             temp, vis = input("\nSearch Accidents (Temperature and Visibility):").split()
             temp = float(temp)
             vis = float(vis)
             answer3 = data[(data['Temperature(F)'] == temp) & (data['Visibility(mi)'] == vis)]
-            print(answer3)
+            print("There were {} accidents found.".format(len(answer3)))
+            print("Time to perfom this search is: {}".format(currTime()))
             print("************************************")        
+        
         elif option == 7:
-            print('\nTotal Running Time (In Minutes):{}'.format(currTime()))
+            print('\nTotal Running Time (In Minutes):{}'.format(currTime() / 60))
             exit()
+        
         else:
             print("\nInvalid option, please try again.")
+    
     except ValueError:
         print("\nInvalid option, please try again.")
         
