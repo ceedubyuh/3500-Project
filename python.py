@@ -106,10 +106,11 @@ def q4(dataframe):
 def q5(dataframe):
     #Get all cities if the state value in the row is CA
     cities = dataframe.loc[dataframe['State'] == 'CA', 'City']
+    states = dataframe['State']
     #Set years to all years
     years = data['Start_Time'].dt.year
     #Loop through them both 
-    for x, y in zip(years, dataframe['State']):
+    for x, y in zip(years, states):
         if x == 2019 and y == 'CA':
             return cities.value_counts()[:5].index.tolist()
 
@@ -248,8 +249,8 @@ while(True):
         
         elif option == 4:
             #Take 3 input variables, set answer to the dataframe entries where all 3 inputs are found
-            city, state, zip = input("\nSearch Accidents (Use City, State, and Zip Code):").split()
-            answer = data[(data['City'] == city) & (data['State'] == state) & (data['Zipcode'] == zip)]
+            c, s, z = input("\nSearch Accidents (Use City, State, and Zip Code):").split()
+            answer = data[(data['City'] == c) & (data['State'] == s) & (data['Zipcode'] == z)]
             print("There were {} accidents found.".format(len(answer)))
             print("Time to perfom this search is: {}".format(currTime()))
             print("************************************")
